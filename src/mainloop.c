@@ -32,11 +32,11 @@ extern bullets_t bullets;
 
 void mainloop() {
 	do {
-		//updatebullets();
+		updatebullets();
 			gfx_SetDrawBuffer();
 				drawmap();
 				drawplayer();
-				//renderbullets();
+				renderbullets();
 			gfx_SwapDraw();
 		keycheck();
 	} while (!(kb_Data[6] & kb_Clear));

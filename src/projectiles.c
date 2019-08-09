@@ -17,11 +17,6 @@
 #include "mainloop.h"
 #include "structs.h"
 #include "projectiles.h"
-/*
-void updatebullets(){
-	
-}
-void renderbullets(){
-	
-}
-*/
+
+void updatebullets(){}
+void renderbullets(){}
