@@ -1,0 +1,243 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\PROJECTILES.C"
+	.assume ADL=1
+	SEGMENT BSS
+_i:
+	DS	3
+_bullet_number:
+	DS	3
+_bullet_x:
+	DS	3
+_bullet_y:
+	DS	3
+;    1	#include <stdbool.h>
+;    2	#include <stddef.h>
+;    3	#include <stdint.h>
+;    4	#include <tice.h>
+;    5	
+;    6	#include <math.h>
+;    7	#include <stdio.h>
+;    8	#include <stdlib.h>
+;    9	#include <string.h>
+;   10	#include <fileioc.h>
+;   11	#include <graphx.h>
+;   12	#include <keypadc.h>
+;   13	
+;   14	#include "projectiles.h"
+;   15	#include "main.h"
+;   16	#include "gfx/tiles_gfx.h"
+;   17	#include "gfx/archero_gfx.h"
+;   18	#include "mainloop.h"
+;   19	#include "structs.h"
+;   20	
+;   21	
+;   22	//extern bullets_t bullets[];
+;   23	extern gfx_tilemap_t tilemap;
+;   24	int i;
+;   25	int bullet_number;
+;   26	int bullet_x;
+;   27	int bullet_y;
+	SEGMENT CODE
+;   28	
+;   29	void updatebullets(){
+_updatebullets:
+	LD	HL,-15
+	CALL	__frameset
+;   30		bullet_number = 0;
+	LD	BC,0
+	LD	(_bullet_number),BC
+;   31		for (i=0;i<MAX_BULLETS;i++){
+	LD	(_i),BC
+	JR	L_12
+L_10:
+;   32			if ((bullets[i].b_alive) == 1){
+	LD	HL,(_i)
+	LD	A,18
+	CALL	__imul_b
+	LD	(IX+-6),HL
+	LD	BC,_bullets
+	ADD	HL,BC
+	LD	(IX+-3),HL
+	LD	(IX+-9),HL
+	LD	IY,(IX+-3)
+	LD	HL,(IY+3)
+	OR	A,A
+	LD	BC,1
+	SBC	HL,BC
+	JR	NZ,L_11
+;   33				bullets[i].b_x = ((bullets[i].b_x) + ((bullets[i].b_vx)*(bullets[i].b_speed)));
+	LD	BC,_bullets
+	LD	HL,(IX+-6)
+	ADD	HL,BC
+	LD	(IX+-15),HL
+	LD	IY,(IX+-15)
+	LD	BC,(IY+9)
+	LD	HL,(IY+6)
+	LD	DE,(IY+15)
+	CALL	__smulu
+	ADD.SIS	HL,DE
+	LD	BC,HL
+	LD	(IY+15),C
+	LD	(IY+16),B
+;   34				bullets[i].b_y = ((bullets[i].b_y) + ((bullets[i].b_vy)*(bullets[i].b_speed)));
+	LD	B,(IY+12)
+	LD	A,(IY+6)
+	LD	C,A
+	MLT	BC
+	LD	A,C
+	ADD	A,(IY+17)
+	LD	(IY+17),A
+;   35				bullet_number++;
+	LD	BC,(_bullet_number)
+	INC	BC
+	LD	(_bullet_number),BC
+;   36				if ((bullets[i].b_x > ((TILEMAP_POS_X + TILEMAP_DRAW_HEIGHT)*(TILEMAP_TILE_SIZE)))||(bullets[i].b_y > ((TILEMAP_POS_Y + TILEMAP_DRAW_WIDTH)*(TILEMAP_TILE_SIZE)))||(bullets[i].b_x < TILEMAP_POS_X)||(bullets[i].b_y < TILEMAP_POS_Y)){
+	LD	BC,(IY+15)
+	OR	A,A
+	LD.LIS	HL,240
+	SBC.SIS	HL,BC
+	JR	C,L_6
+	LD	BC,(IX+-3)
+	LD	(IX+-9),BC
+	LD	IY,(IX+-3)
+	LD	A,(IY+17)
+	UEXT	HL
+	LD	L,A
+	LD	BC,HL
+	LD	HL,1424
+	OR	A,A
+	SBC	HL,BC
+	CALL	__setflag
+	JP	M,L_6
+	LD	BC,(IX+-3)
+	LD	(IX+-9),BC
+	LD	IY,(IX+-3)
+	LD	HL,(IY+15)
+	CALL	__scmpzero
+	JR	C,L_6
+	LD	BC,(IX+-3)
+	LD	(IX+-9),BC
+	LD	BC,(IX+-3)
+	LD	(IX+-12),BC
+	LD	IY,(IX+-3)
+	LD	A,(IY+17)
+	CP	A,79
+	JR	NC,L_8
+L_6:
+;   37				bullets[i].b_alive = 0;
+	LD	BC,(IX+-9)
+	LD	(IX+-12),BC
+	LD	IY,(IX+-12)
+	LD	BC,0
+	LD	(IY+3),BC
+;   38					bullet_number--;
+	LD	BC,(_bullet_number)
+	DEC	BC
+	LD	(_bullet_number),BC
+;   39				}
+L_8:
+;   40				if (bullets[i].b_alive == 1) {
+	LD	IY,(IX+-12)
+	LD	HL,(IY+3)
+	LD	BC,1
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_11
+;   41					renderbullets();
+	CALL	_renderbullets
+;   42				}
+;   43			}
+;   44		}
+L_11:
+	LD	BC,(_i)
+	INC	BC
+	LD	(_i),BC
+L_12:
+	LD	BC,3
+	LD	HL,(_i)
+	OR	A,A
+	SBC	HL,BC
+	CALL	__setflag
+	JP	M,L_10
+;   45	}
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _updatebullets ***************************
+;Name                         Addr/Register   Size   Type
+;_renderbullets                      IMPORT  -----   function
+;_bullets                            IMPORT  unknown variable
+;_i                                  STATIC      3   variable
+;_bullet_number                      STATIC      3   variable
+;G_5                                  IX-12      3   variable
+;G_4                                   IX-9      3   variable
+;G_0                                   IX-6      3   variable
+;G_1                                   IX-3      3   variable
+
+
+; Stack Frame Size: 21 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   46	void renderbullets(){
+_renderbullets:
+	LD	HL,-3
+	CALL	__frameset
+;   47		gfx_TransparentSprite(test_bullet,bullets[i].b_x,bullets[i].b_y);
+	LD	HL,(_i)
+	LD	A,18
+	CALL	__imul_b
+	LD	BC,_bullets
+	ADD	HL,BC
+	LD	(IX+-3),HL
+	LD	IY,(IX+-3)
+	LD	A,(IY+17)
+	UEXT	HL
+	LD	L,A
+	PUSH	HL
+	LD	BC,(IY+15)
+	CALL	__stoiu
+	PUSH	HL
+	LD	BC,_test_bullet_data
+	PUSH	BC
+	CALL	_gfx_TransparentSprite
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _renderbullets ***************************
+;Name                         Addr/Register   Size   Type
+;_test_bullet_data                   IMPORT    258   variable
+;_gfx_TransparentSprite              IMPORT  -----   function
+;_bullets                            IMPORT  unknown variable
+;_i                                  STATIC      3   variable
+
+
+; Stack Frame Size: 9 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	XREF _bullets:ROM
+	XREF _test_bullet_data:ROM
+	XREF _gfx_TransparentSprite:ROM
+	XREF __smulu:ROM
+	XREF __stoiu:ROM
+	XREF __frameset:ROM
+	XREF __setflag:ROM
+	XREF __scmpzero:ROM
+	XREF __imul_b:ROM
+	XDEF _renderbullets
+	XDEF _updatebullets
+	XDEF _bullet_y
+	XDEF _bullet_x
+	XDEF _bullet_number
+	XDEF _i
+	END

@@ -1,6 +1,9 @@
 #ifndef __MAIN_H_
 #define __MAIN_H_
 
+#define TILEMAP_POS_X           0
+#define TILEMAP_POS_Y           79
+
 #define TILEMAP_TILE_SIZE 16
 
 #define TILEMAP_WIDTH       10

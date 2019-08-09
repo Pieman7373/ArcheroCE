@@ -1,0 +1,30 @@
+ .def __program_icon
+ .def __program_description
+
+ .assume adl=1
+ segment .icon
+
+ jp __program_description_end
+ db 1
+__program_icon:
+ db 16,16
+ db 025h,025h,025h,005h,005h,005h,005h,005h,005h,005h,005h,005h,005h,004h,005h,005h
+ db 025h,025h,025h,025h,025h,005h,005h,005h,005h,005h,005h,005h,005h,025h,005h,005h
+ db 045h,064h,065h,025h,025h,025h,025h,005h,005h,025h,046h,0A6h,0E7h,0E6h,045h,005h
+ db 046h,0C0h,0C1h,0C1h,0C1h,0A2h,064h,046h,066h,0A6h,0CEh,0FFh,094h,0C6h,025h,005h
+ db 065h,081h,0A1h,0A0h,0C0h,0E0h,0E0h,0E0h,0E2h,086h,0A6h,06Bh,094h,0C7h,005h,005h
+ db 066h,065h,045h,045h,045h,043h,0A1h,0E0h,06Ah,025h,003h,0A6h,0ADh,066h,005h,005h
+ db 066h,066h,066h,066h,046h,046h,045h,045h,022h,041h,025h,066h,0A6h,045h,005h,005h
+ db 066h,066h,066h,066h,066h,066h,066h,047h,023h,022h,06Ah,0E1h,066h,025h,025h,005h
+ db 086h,086h,086h,066h,086h,086h,067h,043h,046h,046h,0E0h,0E0h,066h,025h,025h,025h
+ db 086h,086h,086h,0A6h,087h,087h,044h,066h,066h,066h,081h,0E0h,084h,045h,025h,025h
+ db 0A6h,0A6h,0A7h,0A7h,0A7h,064h,086h,086h,086h,066h,045h,0E0h,0C2h,046h,045h,025h
+ db 0A7h,0A7h,0A7h,0A7h,085h,086h,087h,086h,066h,066h,066h,0C0h,0E1h,046h,045h,025h
+ db 0A7h,0A7h,0A7h,086h,0A6h,0A7h,0A7h,086h,086h,066h,066h,0A1h,0E1h,066h,046h,025h
+ db 0A7h,0A7h,0A6h,0A7h,0A7h,0A7h,0A6h,086h,086h,086h,066h,0A2h,0E1h,085h,046h,025h
+ db 0A7h,0A7h,0A7h,0A7h,0A7h,0A7h,087h,086h,086h,086h,086h,0A2h,0C0h,084h,065h,025h
+ db 0A7h,0A7h,0A7h,0A7h,0A7h,0A7h,0A6h,086h,086h,086h,086h,086h,066h,066h,045h,045h
+
+__program_description:
+ db "Terrible Archero clone",0
+__program_description_end:

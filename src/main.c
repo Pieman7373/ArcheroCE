@@ -32,8 +32,6 @@
 int transcolor = (0xF8);
 
 /* tilemap stuff */
-#define TILEMAP_POS_X           0
-#define TILEMAP_POS_Y           79
 
 extern uint8_t tilemap_map[];
 gfx_tilemap_t tilemap;

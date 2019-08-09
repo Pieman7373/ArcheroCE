@@ -2,21 +2,23 @@
 #define __STRUCTS_H_
 
 #define MAX_BULLETS 3
-#define BULLET_TYPE
-#define BULLET_ALIVE
-#define BULLET_SPEED
-#define BULLET_VX
-#define BULLET_VY
-#define BULLET_X
-#define BULLET_Y
+#define B_TYPE
+#define B_ALIVE
+#define B_SPEED
+#define B_VX
+#define B_VY
+#define B_X
+#define B_Y
 typedef struct bullets {
-	int bullet_type;
-	int bullet_alive;
-	int bullet_speed;
-	int bullet_vx;
-	int bullet_vy;
-	uint16_t bullet_x;
-	uint8_t bullet_y;
-} bullets_t
+	int b_type;
+	int b_alive;
+	int b_speed;
+	int b_vx;
+	int b_vy;
+	uint16_t b_x;
+	uint8_t b_y;
+} bullets_t;
+
+extern bullets_t bullets[];
 
 #endif

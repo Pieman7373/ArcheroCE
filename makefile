@@ -5,7 +5,7 @@
 # Set COMPRESSED to "YES" to create a compressed program
 # ----------------------------
 
-NAME        ?= ArcheroCE
+NAME        ?= Archero
 COMPRESSED  ?= YES
 ARCHIVED    ?= YES
 ICON        ?= ArcheroCEicon.png
