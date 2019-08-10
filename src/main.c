@@ -25,6 +25,7 @@
 #include "main.h"
 #include "gfx/tiles_gfx.h"
 #include "mainloop.h"
+#include "structs.h"
 
 /* Put your function prototypes here */
 
@@ -35,6 +36,7 @@ int transcolor = (0xF8);
 
 extern uint8_t tilemap_map[];
 gfx_tilemap_t tilemap;
+bullets_t bullets[MAX_BULLETS];
 
 void main(void) {
 	kb_key_t key;
@@ -50,8 +52,8 @@ void main(void) {
     tilemap.draw_width  = TILEMAP_DRAW_WIDTH;
     tilemap.height      = TILEMAP_HEIGHT;
     tilemap.width       = TILEMAP_WIDTH;
-    tilemap.y_loc       = TILEMAP_POS_X;
-    tilemap.x_loc       = TILEMAP_POS_Y;
+    tilemap.y_loc       = TILEMAP_POS_Y;
+    tilemap.x_loc       = TILEMAP_POS_X;
 
 	
 	

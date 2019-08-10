@@ -17,6 +17,7 @@
 #include "mainloop.h"
 #include "structs.h"
 #include "projectiles.h"
+#include "p_collision.h"
 
 //tilemap pixel offsets
 int tmp_pxl_x_offset = 0;
@@ -26,7 +27,13 @@ int tmp_pxl_y_offset = 0;
 int p_pxl_x = 100;
 int p_pxl_y = 100;
 int walking = 0;
+int walkstep = 3;
 int frames = 0;
+int framemax = 16;
+int godown;
+int goleft;
+int goup;
+int goright;
 
 extern int bullet_number;
 extern gfx_tilemap_t tilemap;
@@ -49,21 +56,23 @@ void mainloop() {
 void drawmap(){
 	gfx_FillScreen(0x00);
 	gfx_Tilemap(&tilemap,tmp_pxl_x_offset,tmp_pxl_y_offset);
+	/*
 		gfx_SetTextFGColor(0xfe);
 		gfx_SetTextXY(0,0);
 		gfx_PrintInt(walking,1);
+	*/
 }
 void playerattack(){
 	int n;
 	if (walking == 0){
-		if (frames == 8){
+		if (frames == framemax){
 			n = (bullet_number + 1);
 			bullets[n].b_alive = 1;
-			bullets[n].b_speed = 2;
+			bullets[n].b_speed = 1;
 			bullets[n].b_x = p_pxl_x;
 			bullets[n].b_y = p_pxl_y;
-			bullets[n].b_vx = 5;
-			bullets[n].b_vy = 5;
+			bullets[n].b_vx = 1;
+			bullets[n].b_vy = 1;
 		}
 	}
 }	
@@ -80,9 +89,29 @@ void keycheck(){
 	else {
 		walking = 0;
 	}
+	if (kb_Data[7] & kb_Down) {
+		godown = 0;
+		pcollisiondown();
+		if (godown == 1){p_pxl_y = (p_pxl_y + walkstep);}
+	}
+	if (kb_Data[7] & kb_Left) {
+		goleft = 0;
+		pcollisionleft();
+		if (goleft == 1){p_pxl_x = (p_pxl_x - walkstep);}
+	}
+	if (kb_Data[7] & kb_Up) {
+		goup = 0;
+		pcollisionup();
+		if (goup == 1){p_pxl_y = (p_pxl_y - walkstep);}
+	}
+	if (kb_Data[7] & kb_Right) {
+		goright = 0;
+		pcollisionright();
+		if (goright == 1){p_pxl_x = (p_pxl_x + walkstep);}
+	}
 		
 }
 void framecount(){
 	frames++;
-	if (frames > 8) {frames = 0;}
+	if (frames > framemax) {frames = 0;}
 }

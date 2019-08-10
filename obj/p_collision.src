@@ -1,0 +1,111 @@
+; Zilog eZ80 ANSI C Compiler Release 3.4
+; -optsize -noreduceopt -nomodsect -peephole -globalopt
+; -localcse -const=ROM 
+	FILE	"SRC\P_COLLISION.C"
+	.assume ADL=1
+	SEGMENT CODE
+;    1	#include <stdbool.h>
+;    2	#include <stddef.h>
+;    3	#include <stdint.h>
+;    4	#include <tice.h>
+;    5	
+;    6	#include <math.h>
+;    7	#include <stdio.h>
+;    8	#include <stdlib.h>
+;    9	#include <string.h>
+;   10	#include <fileioc.h>
+;   11	#include <graphx.h>
+;   12	#include <keypadc.h>
+;   13	
+;   14	#include "projectiles.h"
+;   15	#include "main.h"
+;   16	#include "gfx/tiles_gfx.h"
+;   17	#include "gfx/archero_gfx.h"
+;   18	#include "mainloop.h"
+;   19	#include "structs.h"
+;   20	
+;   21	extern int goleft;
+;   22	extern int goup;
+;   23	extern int goright;
+;   24	extern int godown;
+;   25	
+;   26	void pcollisiondown(){
+_pcollisiondown:
+;   27		godown = 1;
+	LD	BC,1
+	LD	(_godown),BC
+;   28	}
+	RET	
+
+
+;**************************** _pcollisiondown ***************************
+;Name                         Addr/Register   Size   Type
+;_godown                             IMPORT      3   variable
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   29	void pcollisionleft(){
+_pcollisionleft:
+;   30		goleft = 1;
+	LD	BC,1
+	LD	(_goleft),BC
+;   31	}
+	RET	
+
+
+;**************************** _pcollisionleft ***************************
+;Name                         Addr/Register   Size   Type
+;_goleft                             IMPORT      3   variable
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   32	void pcollisionup(){
+_pcollisionup:
+;   33		goup = 1;
+	LD	BC,1
+	LD	(_goup),BC
+;   34	}
+	RET	
+
+
+;**************************** _pcollisionup ***************************
+;Name                         Addr/Register   Size   Type
+;_goup                               IMPORT      3   variable
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+;   35	void pcollisionright(){
+_pcollisionright:
+;   36		goright = 1;
+	LD	BC,1
+	LD	(_goright),BC
+	RET	
+
+
+;**************************** _pcollisionright ***************************
+;Name                         Addr/Register   Size   Type
+;_goright                            IMPORT      3   variable
+
+
+; Stack Frame Size: 6 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	XREF _godown:ROM
+	XREF _goright:ROM
+	XREF _goup:ROM
+	XREF _goleft:ROM
+	XDEF _pcollisionright
+	XDEF _pcollisionup
+	XDEF _pcollisionleft
+	XDEF _pcollisiondown
+	END

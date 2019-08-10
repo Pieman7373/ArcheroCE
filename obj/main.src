@@ -10,6 +10,8 @@ _transcolor:
 	SEGMENT BSS
 _tilemap:
 	DS	18
+_bullets:
+	DS	180
 ;    1	/*
 ;    2	 *--------------------------------------
 ;    3	 * Program Name:ArcheroCE
@@ -37,63 +39,65 @@ _tilemap:
 ;   25	#include "main.h"
 ;   26	#include "gfx/tiles_gfx.h"
 ;   27	#include "mainloop.h"
-;   28	
-;   29	/* Put your function prototypes here */
-;   30	
-;   31	/* Put all your globals here */
-;   32	int transcolor = (0xF8);
-;   33	
-;   34	/* tilemap stuff */
-;   35	
-;   36	extern uint8_t tilemap_map[];
-;   37	gfx_tilemap_t tilemap;
+;   28	#include "structs.h"
+;   29	
+;   30	/* Put your function prototypes here */
+;   31	
+;   32	/* Put all your globals here */
+;   33	int transcolor = (0xF8);
+;   34	
+;   35	/* tilemap stuff */
+;   36	
+;   37	extern uint8_t tilemap_map[];
+;   38	gfx_tilemap_t tilemap;
+;   39	bullets_t bullets[MAX_BULLETS];
 	SEGMENT CODE
-;   38	
-;   39	void main(void) {
+;   40	
+;   41	void main(void) {
 _main:
-;   40		kb_key_t key;
-;   41		
-;   42		/* Initialize the tilemap structure */
-;   43		tilemap.map         = tilemap_map;
+;   42		kb_key_t key;
+;   43		
+;   44		/* Initialize the tilemap structure */
+;   45		tilemap.map         = tilemap_map;
 	LD	BC,_tilemap_map
 	LD	(_tilemap),BC
-;   44	    tilemap.tiles       = tileset_tiles;
+;   46	    tilemap.tiles       = tileset_tiles;
 	LD	BC,_tileset_tiles_data
 	LD	(_tilemap+3),BC
-;   45	    tilemap.type_width  = gfx_tile_16_pixel;
+;   47	    tilemap.type_width  = gfx_tile_16_pixel;
 	LD	A,4
 	LD	(_tilemap+10),A
-;   46	    tilemap.type_height = gfx_tile_16_pixel;
+;   48	    tilemap.type_height = gfx_tile_16_pixel;
 	LD	(_tilemap+11),A
-;   47	    tilemap.tile_height = TILEMAP_TILE_SIZE;
+;   49	    tilemap.tile_height = TILEMAP_TILE_SIZE;
 	LD	A,16
 	LD	(_tilemap+6),A
-;   48	    tilemap.tile_width  = TILEMAP_TILE_SIZE;
+;   50	    tilemap.tile_width  = TILEMAP_TILE_SIZE;
 	LD	(_tilemap+7),A
-;   49	    tilemap.draw_height = TILEMAP_DRAW_HEIGHT;
+;   51	    tilemap.draw_height = TILEMAP_DRAW_HEIGHT;
 	LD	A,15
 	LD	(_tilemap+8),A
-;   50	    tilemap.draw_width  = TILEMAP_DRAW_WIDTH;
+;   52	    tilemap.draw_width  = TILEMAP_DRAW_WIDTH;
 	LD	A,10
 	LD	(_tilemap+9),A
-;   51	    tilemap.height      = TILEMAP_HEIGHT;
+;   53	    tilemap.height      = TILEMAP_HEIGHT;
 	LD	A,15
 	LD	(_tilemap+12),A
-;   52	    tilemap.width       = TILEMAP_WIDTH;
+;   54	    tilemap.width       = TILEMAP_WIDTH;
 	LD	A,10
 	LD	(_tilemap+13),A
-;   53	    tilemap.y_loc       = TILEMAP_POS_X;
+;   55	    tilemap.y_loc       = TILEMAP_POS_Y;
 	XOR	A,A
 	LD	(_tilemap+14),A
-;   54	    tilemap.x_loc       = TILEMAP_POS_Y;
+;   56	    tilemap.x_loc       = TILEMAP_POS_X;
 	LD	BC,79
 	LD	(_tilemap+15),BC
-;   55	
-;   56		
-;   57		
-;   58		gfx_Begin();
+;   57	
+;   58		
+;   59		
+;   60		gfx_Begin();
 	CALL	_gfx_Begin
-;   59		gfx_SetPalette(tiles_gfx_pal, sizeof_tiles_gfx_pal, 0);
+;   61		gfx_SetPalette(tiles_gfx_pal, sizeof_tiles_gfx_pal, 0);
 	LD	BC,0
 	PUSH	BC
 	LD	BC,512
@@ -104,20 +108,20 @@ _main:
 	POP	BC
 	POP	BC
 	POP	BC
-;   60		gfx_SetTransparentColor(transcolor);
+;   62		gfx_SetTransparentColor(transcolor);
 	LD	A,(_transcolor)
 	LD	C,A
 	LD	B,0
 	PUSH	BC
 	CALL	_gfx_SetTransparentColor
 	POP	BC
-;   61		
-;   62			mainloop();
-	CALL	_mainloop
 ;   63		
-;   64		gfx_End();
+;   64			mainloop();
+	CALL	_mainloop
+;   65		
+;   66		gfx_End();
 	CALL	_gfx_End
-;   65	}
+;   67	}
 	RET	
 
 
@@ -130,7 +134,7 @@ _main:
 ;_tiles_gfx_pal                      IMPORT    512   variable
 ;_gfx_SetPalette                     IMPORT  -----   function
 ;_gfx_Begin                          IMPORT  -----   function
-;_tileset_tiles_data                 IMPORT     24   variable
+;_tileset_tiles_data                 IMPORT     48   variable
 ;_tilemap                            STATIC     18   variable
 ;_tilemap_map                        IMPORT  unknown variable
 
@@ -148,6 +152,7 @@ _main:
 	XREF _gfx_End:ROM
 	XREF _gfx_Begin:ROM
 	XDEF _main
+	XDEF _bullets
 	XDEF _tilemap
 	XDEF _transcolor
 	END

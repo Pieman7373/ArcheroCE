@@ -33,26 +33,25 @@ _bullet_y:
 ;   19	#include "structs.h"
 ;   20	
 ;   21	
-;   22	//extern bullets_t bullets[];
-;   23	extern gfx_tilemap_t tilemap;
-;   24	int i;
-;   25	int bullet_number;
-;   26	int bullet_x;
-;   27	int bullet_y;
+;   22	extern gfx_tilemap_t tilemap;
+;   23	int i;
+;   24	int bullet_number;
+;   25	int bullet_x;
+;   26	int bullet_y;
 	SEGMENT CODE
-;   28	
-;   29	void updatebullets(){
+;   27	
+;   28	void updatebullets(){
 _updatebullets:
 	LD	HL,-15
 	CALL	__frameset
-;   30		bullet_number = 0;
+;   29		bullet_number = 0;
 	LD	BC,0
 	LD	(_bullet_number),BC
-;   31		for (i=0;i<MAX_BULLETS;i++){
+;   30		for (i=0;i<MAX_BULLETS;i++){
 	LD	(_i),BC
 	JR	L_12
 L_10:
-;   32			if ((bullets[i].b_alive) == 1){
+;   31			if ((bullets[i].b_alive) == 1){
 	LD	HL,(_i)
 	LD	A,18
 	CALL	__imul_b
@@ -67,7 +66,7 @@ L_10:
 	LD	BC,1
 	SBC	HL,BC
 	JR	NZ,L_11
-;   33				bullets[i].b_x = ((bullets[i].b_x) + ((bullets[i].b_vx)*(bullets[i].b_speed)));
+;   32				bullets[i].b_x = ((bullets[i].b_x) + ((bullets[i].b_vx)*(bullets[i].b_speed)));
 	LD	BC,_bullets
 	LD	HL,(IX+-6)
 	ADD	HL,BC
@@ -81,7 +80,7 @@ L_10:
 	LD	BC,HL
 	LD	(IY+15),C
 	LD	(IY+16),B
-;   34				bullets[i].b_y = ((bullets[i].b_y) + ((bullets[i].b_vy)*(bullets[i].b_speed)));
+;   33				bullets[i].b_y = ((bullets[i].b_y) + ((bullets[i].b_vy)*(bullets[i].b_speed)));
 	LD	B,(IY+12)
 	LD	A,(IY+6)
 	LD	C,A
@@ -89,33 +88,29 @@ L_10:
 	LD	A,C
 	ADD	A,(IY+17)
 	LD	(IY+17),A
-;   35				bullet_number++;
+;   34				bullet_number++;
 	LD	BC,(_bullet_number)
 	INC	BC
 	LD	(_bullet_number),BC
-;   36				if ((bullets[i].b_x > ((TILEMAP_POS_X + TILEMAP_DRAW_HEIGHT)*(TILEMAP_TILE_SIZE)))||(bullets[i].b_y > ((TILEMAP_POS_Y + TILEMAP_DRAW_WIDTH)*(TILEMAP_TILE_SIZE)))||(bullets[i].b_x < TILEMAP_POS_X)||(bullets[i].b_y < TILEMAP_POS_Y)){
+;   35				if ((bullets[i].b_x > ((TILEMAP_POS_X + TILEMAP_DRAW_HEIGHT)*(TILEMAP_TILE_SIZE)))||(bullets[i].b_y > ((TILEMAP_POS_Y + TILEMAP_DRAW_WIDTH)*(TILEMAP_TILE_SIZE)))||(bullets[i].b_x < TILEMAP_POS_X)||(bullets[i].b_y < TILEMAP_POS_Y)){
 	LD	BC,(IY+15)
 	OR	A,A
-	LD.LIS	HL,240
+	LD.LIS	HL,1504
 	SBC.SIS	HL,BC
 	JR	C,L_6
 	LD	BC,(IX+-3)
 	LD	(IX+-9),BC
 	LD	IY,(IX+-3)
-	LD	A,(IY+17)
-	UEXT	HL
-	LD	L,A
-	LD	BC,HL
-	LD	HL,1424
-	OR	A,A
-	SBC	HL,BC
-	CALL	__setflag
-	JP	M,L_6
+	LD	A,160
+	CP	A,(IY+17)
+	JR	C,L_6
 	LD	BC,(IX+-3)
 	LD	(IX+-9),BC
 	LD	IY,(IX+-3)
 	LD	HL,(IY+15)
-	CALL	__scmpzero
+	LD.LIS	BC,79
+	OR	A,A
+	SBC.SIS	HL,BC
 	JR	C,L_6
 	LD	BC,(IX+-3)
 	LD	(IX+-9),BC
@@ -123,45 +118,44 @@ L_10:
 	LD	(IX+-12),BC
 	LD	IY,(IX+-3)
 	LD	A,(IY+17)
-	CP	A,79
+	OR	A,A
 	JR	NC,L_8
 L_6:
-;   37				bullets[i].b_alive = 0;
+;   36				bullets[i].b_alive = 0;
 	LD	BC,(IX+-9)
 	LD	(IX+-12),BC
 	LD	IY,(IX+-12)
 	LD	BC,0
 	LD	(IY+3),BC
-;   38					bullet_number--;
+;   37					bullet_number--;
 	LD	BC,(_bullet_number)
 	DEC	BC
 	LD	(_bullet_number),BC
-;   39				}
+;   38				}
 L_8:
-;   40				if (bullets[i].b_alive == 1) {
+;   39				if (bullets[i].b_alive == 1) {
 	LD	IY,(IX+-12)
 	LD	HL,(IY+3)
 	LD	BC,1
 	OR	A,A
 	SBC	HL,BC
 	JR	NZ,L_11
-;   41					renderbullets();
+;   40					renderbullets();
 	CALL	_renderbullets
-;   42				}
-;   43			}
-;   44		}
+;   41				}
+;   42			}
+;   43		}
 L_11:
 	LD	BC,(_i)
 	INC	BC
 	LD	(_i),BC
 L_12:
-	LD	BC,3
+	LD	BC,10
 	LD	HL,(_i)
 	OR	A,A
 	SBC	HL,BC
-	CALL	__setflag
 	JP	M,L_10
-;   45	}
+;   44	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -183,11 +177,11 @@ L_12:
 ;       Spill Code: 0 (instruction)
 
 
-;   46	void renderbullets(){
+;   45	void renderbullets(){
 _renderbullets:
 	LD	HL,-3
 	CALL	__frameset
-;   47		gfx_TransparentSprite(test_bullet,bullets[i].b_x,bullets[i].b_y);
+;   46		gfx_TransparentSprite(test_bullet,bullets[i].b_x,bullets[i].b_y);
 	LD	HL,(_i)
 	LD	A,18
 	CALL	__imul_b
@@ -231,8 +225,6 @@ _renderbullets:
 	XREF __smulu:ROM
 	XREF __stoiu:ROM
 	XREF __frameset:ROM
-	XREF __setflag:ROM
-	XREF __scmpzero:ROM
 	XREF __imul_b:ROM
 	XDEF _renderbullets
 	XDEF _updatebullets

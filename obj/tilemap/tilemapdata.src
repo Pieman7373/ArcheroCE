@@ -5,17 +5,17 @@
 	.assume ADL=1
 	SEGMENT DATA
 _tilemap_map:
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
@@ -24,78 +24,88 @@ _tilemap_map:
 	DB	0
 	DB	0
 	DB	0
-	DB	1
-	DB	1
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
+	DB	8
 	DB	0
 	DB	0
+	DB	9
 	DB	0
+	DB	8
+	DB	8
 	DB	0
+	DB	8
 	DB	0
-	DB	1
-	DB	1
 	DB	0
 	DB	0
 	DB	0
 	DB	0
 	DB	0
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
-	DB	1
-	DB	1
 	DB	0
 	DB	0
 	DB	0
+	DB	8
 	DB	0
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
 	DB	0
-	DB	1
-	DB	1
 	DB	0
 	DB	0
 	DB	0
 	DB	0
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
+	DB	8
 	DB	0
-	DB	1
-	DB	1
 	DB	0
+	DB	9
 	DB	0
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
 	DB	0
 	DB	0
 	DB	0
-	DB	1
-	DB	1
 	DB	0
 	DB	0
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
 	DB	0
 	DB	0
 	DB	0
-	DB	1
-	DB	1
 	DB	0
 	DB	0
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
 	DB	0
+	DB	8
 	DB	0
+	DB	8
 	DB	0
-	DB	1
-	DB	1
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
@@ -104,57 +114,47 @@ _tilemap_map:
 	DB	0
 	DB	0
 	DB	0
-	DB	1
-	DB	1
+	DB	8
+	DB	8
 	DB	0
 	DB	0
 	DB	0
 	DB	0
 	DB	0
+	DB	9
 	DB	0
 	DB	0
+	DB	8
+	DB	8
 	DB	0
-	DB	1
-	DB	1
+	DB	9
 	DB	0
 	DB	0
 	DB	0
 	DB	0
 	DB	0
 	DB	0
+	DB	8
+	DB	8
 	DB	0
 	DB	0
-	DB	1
-	DB	1
 	DB	0
+	DB	8
 	DB	0
 	DB	0
 	DB	0
 	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	1
-	DB	1
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
-	DB	1
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	8
 	XDEF _tilemap_map
 ;    1	// Converted using ConvTile
 ;    2	#include <stdint.h>

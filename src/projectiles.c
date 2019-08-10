@@ -19,7 +19,6 @@
 #include "structs.h"
 
 
-//extern bullets_t bullets[];
 extern gfx_tilemap_t tilemap;
 int i;
 int bullet_number;
