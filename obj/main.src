@@ -11,7 +11,7 @@ _transcolor:
 _tilemap:
 	DS	18
 _bullets:
-	DS	180
+	DS	162
 ;    1	/*
 ;    2	 *--------------------------------------
 ;    3	 * Program Name:ArcheroCE

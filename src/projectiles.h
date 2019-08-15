@@ -4,5 +4,6 @@
 
 void updatebullets();
 void renderbullets();
+void checkbullets();
 
 #endif

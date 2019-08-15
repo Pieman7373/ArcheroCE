@@ -23,93 +23,13 @@ _tilemap_map:
 	DB	0
 	DB	0
 	DB	0
-	DB	0
 	DB	8
 	DB	8
-	DB	0
-	DB	0
-	DB	0
 	DB	8
-	DB	0
 	DB	0
 	DB	9
 	DB	0
 	DB	8
-	DB	8
-	DB	0
-	DB	8
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	8
-	DB	8
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	8
-	DB	0
-	DB	8
-	DB	8
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	8
-	DB	8
-	DB	0
-	DB	0
-	DB	0
-	DB	8
-	DB	0
-	DB	0
-	DB	9
-	DB	0
-	DB	8
-	DB	8
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	8
-	DB	8
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	8
-	DB	8
-	DB	0
-	DB	0
-	DB	0
-	DB	0
-	DB	8
-	DB	0
-	DB	8
-	DB	0
-	DB	8
-	DB	8
-	DB	0
-	DB	0
-	DB	0
-	DB	0
 	DB	0
 	DB	0
 	DB	0
@@ -127,6 +47,16 @@ _tilemap_map:
 	DB	8
 	DB	8
 	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	8
+	DB	8
+	DB	0
 	DB	9
 	DB	0
 	DB	0
@@ -139,7 +69,77 @@ _tilemap_map:
 	DB	0
 	DB	0
 	DB	0
+	DB	9
+	DB	0
+	DB	0
+	DB	9
+	DB	0
 	DB	8
+	DB	8
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	8
+	DB	0
+	DB	8
+	DB	8
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	8
+	DB	8
+	DB	0
+	DB	8
+	DB	0
+	DB	9
+	DB	0
+	DB	0
+	DB	9
+	DB	0
+	DB	8
+	DB	8
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	8
+	DB	8
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	0
+	DB	8
+	DB	8
+	DB	8
+	DB	8
+	DB	0
+	DB	9
+	DB	0
+	DB	0
+	DB	8
+	DB	0
+	DB	9
+	DB	0
+	DB	8
+	DB	8
+	DB	0
+	DB	0
+	DB	0
+	DB	0
 	DB	0
 	DB	0
 	DB	0

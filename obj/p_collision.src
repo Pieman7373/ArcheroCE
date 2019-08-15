@@ -28,31 +28,106 @@
 ;   22	extern int goup;
 ;   23	extern int goright;
 ;   24	extern int godown;
-;   25	
-;   26	void pcollisiondown(){
+;   25	extern int tmp_pxl_x_offset;
+;   26	extern int tmp_pxl_y_offset;
+;   27	extern int p_pxl_x;
+;   28	extern int p_pxl_y;
+;   29	extern int walkstep;
+;   30	extern gfx_tilemap_t tilemap;
+;   31	
+;   32	void pcollisiondown(){
 _pcollisiondown:
-;   27		godown = 1;
+;   33		if ((gfx_GetTile(&tilemap,(tmp_pxl_x_offset + ((p_pxl_x) - TILEMAP_POS_X)),(tmp_pxl_y_offset + ((p_pxl_y + 16) - TILEMAP_POS_Y)) + walkstep)) < 8){
+	LD	IY,(_p_pxl_y)
+	LEA	HL,IY+16
+	LD	BC,(_tmp_pxl_y_offset)
+	ADD	HL,BC
+	LD	IY,(_p_pxl_x)
+	LD	BC,(_walkstep)
+	ADD	HL,BC
+	PUSH	HL
+	LEA	HL,IY+-79
+	LD	BC,(_tmp_pxl_x_offset)
+	ADD	HL,BC
+	PUSH	HL
+	LD	BC,_tilemap
+	PUSH	BC
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,8
+	SBC	HL,BC
+	CALL	__setflag
+	JP	P,L_2
+;   34			godown = 1;
 	LD	BC,1
 	LD	(_godown),BC
-;   28	}
+;   35		}
+;   36		else if ((gfx_GetTile(&tilemap,(tmp_pxl_x_offset + ((p_pxl_x + 8) - TILEMAP_POS_X)),(tmp_pxl_y_offset + ((p_pxl_y + 16) - TILEMAP_POS_Y)) + walkstep)) < 8){
+	JR	L_3
+L_2:
+	LD	IY,(_p_pxl_y)
+	LEA	HL,IY+16
+	LD	IY,(_p_pxl_x)
+	LD	BC,(_tmp_pxl_y_offset)
+	ADD	HL,BC
+	LD	BC,(_walkstep)
+	ADD	HL,BC
+	PUSH	HL
+	LEA	HL,IY+-71
+	LD	BC,(_tmp_pxl_x_offset)
+	ADD	HL,BC
+	PUSH	HL
+	LD	BC,_tilemap
+	PUSH	BC
+	CALL	_gfx_TilePtr
+	POP	BC
+	POP	BC
+	POP	BC
+	LD	A,(HL)
+	UEXT	HL
+	LD	L,A
+	OR	A,A
+	LD	BC,8
+	SBC	HL,BC
+	CALL	__setflag
+	JP	P,L_3
+;   37			godown = 1;
+	LD	BC,1
+	LD	(_godown),BC
+;   38		}
+;   39	}
+L_3:
 	RET	
 
 
 ;**************************** _pcollisiondown ***************************
 ;Name                         Addr/Register   Size   Type
 ;_godown                             IMPORT      3   variable
+;_tilemap                            IMPORT     18   variable
+;_tmp_pxl_x_offset                   IMPORT      3   variable
+;_p_pxl_x                            IMPORT      3   variable
+;_walkstep                           IMPORT      3   variable
+;_tmp_pxl_y_offset                   IMPORT      3   variable
+;_p_pxl_y                            IMPORT      3   variable
+;_gfx_TilePtr                        IMPORT  -----   function
 
 
 ; Stack Frame Size: 6 (bytes)
 ;       Spill Code: 0 (instruction)
 
 
-;   29	void pcollisionleft(){
+;   40	void pcollisionleft(){
 _pcollisionleft:
-;   30		goleft = 1;
+;   41		goleft = 1;
 	LD	BC,1
 	LD	(_goleft),BC
-;   31	}
+;   42	}
 	RET	
 
 
@@ -65,12 +140,12 @@ _pcollisionleft:
 ;       Spill Code: 0 (instruction)
 
 
-;   32	void pcollisionup(){
+;   43	void pcollisionup(){
 _pcollisionup:
-;   33		goup = 1;
+;   44		goup = 1;
 	LD	BC,1
 	LD	(_goup),BC
-;   34	}
+;   45	}
 	RET	
 
 
@@ -83,9 +158,9 @@ _pcollisionup:
 ;       Spill Code: 0 (instruction)
 
 
-;   35	void pcollisionright(){
+;   46	void pcollisionright(){
 _pcollisionright:
-;   36		goright = 1;
+;   47		goright = 1;
 	LD	BC,1
 	LD	(_goright),BC
 	RET	
@@ -100,10 +175,18 @@ _pcollisionright:
 ;       Spill Code: 0 (instruction)
 
 
+	XREF _tilemap:ROM
+	XREF _walkstep:ROM
+	XREF _p_pxl_y:ROM
+	XREF _p_pxl_x:ROM
+	XREF _tmp_pxl_y_offset:ROM
+	XREF _tmp_pxl_x_offset:ROM
 	XREF _godown:ROM
 	XREF _goright:ROM
 	XREF _goup:ROM
 	XREF _goleft:ROM
+	XREF _gfx_TilePtr:ROM
+	XREF __setflag:ROM
 	XDEF _pcollisionright
 	XDEF _pcollisionup
 	XDEF _pcollisionleft

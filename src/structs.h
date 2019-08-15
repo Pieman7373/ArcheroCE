@@ -1,7 +1,8 @@
 #ifndef __STRUCTS_H_
 #define __STRUCTS_H_
 
-#define MAX_BULLETS 10
+//one less than actual maximum
+#define MAX_BULLETS 9
 #define B_TYPE
 #define B_ALIVE
 #define B_SPEED

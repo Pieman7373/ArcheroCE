@@ -12,6 +12,15 @@ _bullet_x:
 	DS	3
 _bullet_y:
 	DS	3
+_bullet_outside:
+	DS	3
+	SEGMENT DATA
+_user:
+	DW	0
+	DB	0
+_whydoihavetodothis:
+	DW	1
+	DB	0
 ;    1	#include <stdbool.h>
 ;    2	#include <stddef.h>
 ;    3	#include <stdint.h>
@@ -38,40 +47,55 @@ _bullet_y:
 ;   24	int bullet_number;
 ;   25	int bullet_x;
 ;   26	int bullet_y;
+;   27	int bullet_outside;
+;   28	int user = 0;
+;   29	int whydoihavetodothis = 1;
 	SEGMENT CODE
-;   27	
-;   28	void updatebullets(){
+;   30	extern int visiblebullets;
+;   31	extern int n;
+;   32	
+;   33	void updatebullets(){
 _updatebullets:
-	LD	HL,-15
+	LD	HL,-6
 	CALL	__frameset
-;   29		bullet_number = 0;
+;   34		
+;   35		if (bullet_number >= MAX_BULLETS) {
+	LD	BC,9
+	LD	HL,(_bullet_number)
+	OR	A,A
+	SBC	HL,BC
+	CALL	__setflag
+	JP	M,L_7
+;   36			bullet_number = 0;
 	LD	BC,0
 	LD	(_bullet_number),BC
-;   30		for (i=0;i<MAX_BULLETS;i++){
+;   37		}
+L_7:
+;   38		
+;   39		for (i=0;i < visiblebullets;i++){
+	LD	BC,0
 	LD	(_i),BC
-	JR	L_12
-L_10:
-;   31			if ((bullets[i].b_alive) == 1){
+	JR	L_6
+L_4:
+;   40			if ((bullets[i].b_alive) == 1){
 	LD	HL,(_i)
 	LD	A,18
 	CALL	__imul_b
-	LD	(IX+-6),HL
+	LD	(IX+-3),HL
 	LD	BC,_bullets
 	ADD	HL,BC
-	LD	(IX+-3),HL
-	LD	(IX+-9),HL
-	LD	IY,(IX+-3)
+	LD	IY,HL
 	LD	HL,(IY+3)
 	OR	A,A
 	LD	BC,1
 	SBC	HL,BC
-	JR	NZ,L_11
-;   32				bullets[i].b_x = ((bullets[i].b_x) + ((bullets[i].b_vx)*(bullets[i].b_speed)));
+	JR	NZ,L_5
+;   41				bullets[i].b_x = ((bullets[i].b_x) + ((bullets[i].b_vx)*(bullets[i].b_speed)));
 	LD	BC,_bullets
-	LD	HL,(IX+-6)
+	LD	HL,(IX+-3)
 	ADD	HL,BC
-	LD	(IX+-15),HL
-	LD	IY,(IX+-15)
+	LD	(IX+-6),HL
+	LD	IY,(IX+-6)
 	LD	BC,(IY+9)
 	LD	HL,(IY+6)
 	LD	DE,(IY+15)
@@ -80,7 +104,7 @@ L_10:
 	LD	BC,HL
 	LD	(IY+15),C
 	LD	(IY+16),B
-;   33				bullets[i].b_y = ((bullets[i].b_y) + ((bullets[i].b_vy)*(bullets[i].b_speed)));
+;   42				bullets[i].b_y = ((bullets[i].b_y) + ((bullets[i].b_vy)*(bullets[i].b_speed)));
 	LD	B,(IY+12)
 	LD	A,(IY+6)
 	LD	C,A
@@ -88,74 +112,42 @@ L_10:
 	LD	A,C
 	ADD	A,(IY+17)
 	LD	(IY+17),A
-;   34				bullet_number++;
-	LD	BC,(_bullet_number)
-	INC	BC
-	LD	(_bullet_number),BC
-;   35				if ((bullets[i].b_x > ((TILEMAP_POS_X + TILEMAP_DRAW_HEIGHT)*(TILEMAP_TILE_SIZE)))||(bullets[i].b_y > ((TILEMAP_POS_Y + TILEMAP_DRAW_WIDTH)*(TILEMAP_TILE_SIZE)))||(bullets[i].b_x < TILEMAP_POS_X)||(bullets[i].b_y < TILEMAP_POS_Y)){
-	LD	BC,(IY+15)
-	OR	A,A
-	LD.LIS	HL,1504
-	SBC.SIS	HL,BC
-	JR	C,L_6
-	LD	BC,(IX+-3)
-	LD	(IX+-9),BC
-	LD	IY,(IX+-3)
-	LD	A,160
-	CP	A,(IY+17)
-	JR	C,L_6
-	LD	BC,(IX+-3)
-	LD	(IX+-9),BC
-	LD	IY,(IX+-3)
-	LD	HL,(IY+15)
-	LD.LIS	BC,79
-	OR	A,A
-	SBC.SIS	HL,BC
-	JR	C,L_6
-	LD	BC,(IX+-3)
-	LD	(IX+-9),BC
-	LD	BC,(IX+-3)
-	LD	(IX+-12),BC
-	LD	IY,(IX+-3)
-	LD	A,(IY+17)
-	OR	A,A
-	JR	NC,L_8
-L_6:
-;   36				bullets[i].b_alive = 0;
-	LD	BC,(IX+-9)
-	LD	(IX+-12),BC
-	LD	IY,(IX+-12)
-	LD	BC,0
-	LD	(IY+3),BC
-;   37					bullet_number--;
-	LD	BC,(_bullet_number)
-	DEC	BC
-	LD	(_bullet_number),BC
-;   38				}
-L_8:
-;   39				if (bullets[i].b_alive == 1) {
-	LD	IY,(IX+-12)
+;   43				
+;   44				user = 2;
+	LD	BC,2
+	LD	(_user),BC
+;   45				checkbullets();
+	CALL	_checkbullets
+;   46					
+;   47				if (bullets[i].b_alive == 1) {
+	LD	HL,(_i)
+	LD	A,18
+	CALL	__imul_b
+	LD	BC,_bullets
+	ADD	HL,BC
+	LD	IY,HL
 	LD	HL,(IY+3)
-	LD	BC,1
 	OR	A,A
+	LD	BC,1
 	SBC	HL,BC
-	JR	NZ,L_11
-;   40					renderbullets();
+	JR	NZ,L_5
+;   48					renderbullets();
 	CALL	_renderbullets
-;   41				}
-;   42			}
-;   43		}
-L_11:
+;   49				}
+;   50			}
+;   51		}
+L_5:
 	LD	BC,(_i)
 	INC	BC
 	LD	(_i),BC
-L_12:
-	LD	BC,10
+L_6:
+	LD	BC,(_visiblebullets)
 	LD	HL,(_i)
 	OR	A,A
 	SBC	HL,BC
-	JP	M,L_10
-;   44	}
+	CALL	__setflag
+	JP	M,L_4
+;   52	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -163,25 +155,26 @@ L_12:
 
 ;**************************** _updatebullets ***************************
 ;Name                         Addr/Register   Size   Type
+;_visiblebullets                     IMPORT      3   variable
 ;_renderbullets                      IMPORT  -----   function
+;_checkbullets                       IMPORT  -----   function
+;_user                               STATIC      3   variable
 ;_bullets                            IMPORT  unknown variable
 ;_i                                  STATIC      3   variable
 ;_bullet_number                      STATIC      3   variable
-;G_5                                  IX-12      3   variable
-;G_4                                   IX-9      3   variable
-;G_0                                   IX-6      3   variable
-;G_1                                   IX-3      3   variable
+;G_0                                   IX-3      3   variable
 
 
-; Stack Frame Size: 21 (bytes)
+; Stack Frame Size: 12 (bytes)
 ;       Spill Code: 0 (instruction)
 
 
-;   45	void renderbullets(){
+;   53	
+;   54	void renderbullets(){
 _renderbullets:
 	LD	HL,-3
 	CALL	__frameset
-;   46		gfx_TransparentSprite(test_bullet,bullets[i].b_x,bullets[i].b_y);
+;   55		gfx_TransparentSprite(test_bullet,bullets[i].b_x,bullets[i].b_y);
 	LD	HL,(_i)
 	LD	A,18
 	CALL	__imul_b
@@ -202,6 +195,7 @@ _renderbullets:
 	POP	BC
 	POP	BC
 	POP	BC
+;   56	}
 	LD	SP,IX
 	POP	IX
 	RET	
@@ -219,15 +213,197 @@ _renderbullets:
 ;       Spill Code: 0 (instruction)
 
 
+;   57	
+;   58	void checkbullets(){
+_checkbullets:
+	LD	HL,-9
+	CALL	__frameset
+;   59		extern int bullet_outside;
+;   60		int element = 0;
+	LD	BC,0
+	LD	(IX+-9),BC
+;   61	/*
+;   62	bullets[i].b_x > (TILEMAP_POS_X + (TILEMAP_DRAW_WIDTH * TILEMAP_TILE_SIZE))
+;   63	bullets[i].b_y > (TILEMAP_POS_Y + (TILEMAP_DRAW_HEIGHT * TILEMAP_TILE_SIZE))
+;   64	bullets[i].b_x < TILEMAP_POS_X
+;   65	bullets[i].b_y < TILEMAP_POS_Y
+;   66	*/
+;   67		
+;   68		bullet_outside = 0;
+	LD	(_bullet_outside),BC
+;   69		if (user == 1){element = n;}
+	LD	HL,(_user)
+	LD	BC,1
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_12
+	LD	BC,(_n)
+	LD	(IX+-9),BC
+L_12:
+;   70		if (user == 2){element = i;}
+	LD	BC,2
+	LD	HL,(_user)
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_20
+	LD	BC,(_i)
+	LD	(IX+-9),BC
+L_20:
+;   71		
+;   72		if (bullets[element].b_x > ((TILEMAP_POS_X + (TILEMAP_DRAW_WIDTH * TILEMAP_TILE_SIZE)) - 16)){
+	LD	HL,(IX+-9)
+	LD	A,18
+	CALL	__imul_b
+	LD	BC,_bullets
+	ADD	HL,BC
+	LD	(IX+-3),HL
+	LD	(IX+-6),HL
+	LD	IY,(IX+-3)
+	LD	BC,(IY+15)
+	LD.LIS	HL,223
+	OR	A,A
+	SBC.SIS	HL,BC
+	JR	NC,L_19
+;   73			bullet_outside = 1;
+	LD	BC,1
+	LD	(_bullet_outside),BC
+;   74		}
+;   75		else if (bullets[element].b_y > (TILEMAP_POS_Y + (TILEMAP_DRAW_HEIGHT * TILEMAP_TILE_SIZE))){
+	JR	L_23
+L_19:
+	LD	BC,(IX+-3)
+	LD	(IX+-6),BC
+	LD	IY,(IX+-3)
+	LD	A,240
+	CP	A,(IY+17)
+	JR	NC,L_17
+;   76			bullet_outside = 1;
+	LD	BC,1
+	LD	(_bullet_outside),BC
+;   77		}
+;   78		else if (bullets[element].b_x < TILEMAP_POS_X){
+	JR	L_23
+L_17:
+	LD	BC,(IX+-3)
+	LD	(IX+-6),BC
+	LD	IY,(IX+-3)
+	LD	HL,(IY+15)
+	LD.LIS	BC,79
+	OR	A,A
+	SBC.SIS	HL,BC
+	JR	NC,L_15
+;   79			bullet_outside = 1;
+	LD	BC,1
+	LD	(_bullet_outside),BC
+;   80		}
+;   81		else if (bullets[element].b_y < TILEMAP_POS_Y){
+	JR	L_23
+L_15:
+	LD	BC,(IX+-3)
+	LD	(IX+-6),BC
+	LD	IY,(IX+-3)
+	LD	A,(IY+17)
+	OR	A,A
+	JR	NC,L_23
+;   82			bullet_outside = 1;
+	LD	BC,1
+	LD	(_bullet_outside),BC
+;   83		}
+L_23:
+;   84		
+;   85		
+;   86		if ((n == 0) && (whydoihavetodothis == 1)){
+	LD	HL,(_n)
+	CALL	__icmpzero
+	JR	NZ,L_25
+	LD	BC,1
+	LD	HL,(_whydoihavetodothis)
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_25
+;   87			bullet_outside = 0;
+	LD	BC,0
+	LD	(_bullet_outside),BC
+;   88		}
+L_25:
+;   89		whydoihavetodothis++;
+	LD	BC,(_whydoihavetodothis)
+	INC	BC
+	LD	(_whydoihavetodothis),BC
+;   90		if (whydoihavetodothis > 2){whydoihavetodothis = 2;}
+	OR	A,A
+	LD	HL,2
+	SBC	HL,BC
+	JP	P,L_31
+	LD	BC,2
+	LD	(_whydoihavetodothis),BC
+L_31:
+;   91		
+;   92			
+;   93		if (bullet_outside == 1){
+	LD	BC,1
+	LD	HL,(_bullet_outside)
+	OR	A,A
+	SBC	HL,BC
+	JR	NZ,L_32
+;   94			visiblebullets--;
+	LD	BC,(_visiblebullets)
+	DEC	BC
+	LD	(_visiblebullets),BC
+;   95				if (visiblebullets < 0){visiblebullets = 0;}
+	LD	HL,(_visiblebullets)
+	CALL	__icmpzero
+	CALL	__setflag
+	JP	P,L_29
+	LD	BC,0
+	LD	(_visiblebullets),BC
+L_29:
+;   96			bullets[element].b_alive = 0;
+	LD	BC,0
+	LD	IY,(IX+-6)
+	LD	(IY+3),BC
+;   97		}
+L_32:
+	LD	SP,IX
+	POP	IX
+	RET	
+
+
+;**************************** _checkbullets ***************************
+;Name                         Addr/Register   Size   Type
+;_visiblebullets                     IMPORT      3   variable
+;_whydoihavetodothis                 STATIC      3   variable
+;_bullets                            IMPORT  unknown variable
+;_i                                  STATIC      3   variable
+;_n                                  IMPORT      3   variable
+;_user                               STATIC      3   variable
+;_bullet_outside                     IMPORT      3   variable
+;element                               IX-9      3   variable
+;G_4                                   IX-6      3   variable
+;G_1                                   IX-3      3   variable
+
+
+; Stack Frame Size: 15 (bytes)
+;       Spill Code: 0 (instruction)
+
+
+	XREF _n:ROM
+	XREF _visiblebullets:ROM
 	XREF _bullets:ROM
 	XREF _test_bullet_data:ROM
 	XREF _gfx_TransparentSprite:ROM
 	XREF __smulu:ROM
 	XREF __stoiu:ROM
 	XREF __frameset:ROM
+	XREF __setflag:ROM
+	XREF __icmpzero:ROM
 	XREF __imul_b:ROM
+	XDEF _checkbullets
 	XDEF _renderbullets
 	XDEF _updatebullets
+	XDEF _whydoihavetodothis
+	XDEF _user
+	XDEF _bullet_outside
 	XDEF _bullet_y
 	XDEF _bullet_x
 	XDEF _bullet_number

@@ -22,6 +22,7 @@
 //tilemap pixel offsets
 int tmp_pxl_x_offset = 0;
 int tmp_pxl_y_offset = 0;
+int n = 0;
 
 //player screen coordinates in pixels
 int p_pxl_x = 100;
@@ -30,12 +31,16 @@ int walking = 0;
 int walkstep = 3;
 int frames = 0;
 int framemax = 16;
+//int framemax = 0;
+int visiblebullets = 0;
 int godown;
 int goleft;
 int goup;
 int goright;
+int p_projectile_speed = 1;
 
 extern int bullet_number;
+extern int bullet_outside;
 extern gfx_tilemap_t tilemap;
 //extern bullets_t bullets[];
 
@@ -61,18 +66,57 @@ void drawmap(){
 		gfx_SetTextXY(0,0);
 		gfx_PrintInt(walking,1);
 	*/
+	gfx_SetTextFGColor(0xfe);
+	gfx_SetTextXY(0,0);
+	gfx_PrintInt(visiblebullets,2);
+	gfx_SetTextXY(0,10);
+	gfx_PrintInt(bullet_outside,1);
 }
 void playerattack(){
-	int n;
+	
+	int random;
+	extern int user;
+	
 	if (walking == 0){
 		if (frames == framemax){
-			n = (bullet_number + 1);
-			bullets[n].b_alive = 1;
-			bullets[n].b_speed = 1;
-			bullets[n].b_x = p_pxl_x;
-			bullets[n].b_y = p_pxl_y;
-			bullets[n].b_vx = 1;
-			bullets[n].b_vy = 1;
+			if (bullet_number <= MAX_BULLETS){
+				if (visiblebullets <= MAX_BULLETS) {
+					
+					user = 1;
+					checkbullets();
+					
+						if (bullet_outside == 0){
+							bullet_number++;
+							visiblebullets++;									
+							n = (bullet_number);
+							bullets[n].b_alive = 1;
+							bullets[n].b_speed = p_projectile_speed;
+							bullets[n].b_x = p_pxl_x;
+							bullets[n].b_y = p_pxl_y;
+						}
+								
+					//randomness is for testing only
+					//add enemy distance and required projectile velocities functions
+					random = (rand() % (4 - 0) + 0);
+					if (random == 0) {
+						bullets[n].b_vx = -1;
+						bullets[n].b_vy = -1;
+					}
+					if (random == 1) {
+						bullets[n].b_vx = 1;
+						bullets[n].b_vy = -1;
+					}
+					if (random == 2) {
+						bullets[n].b_vx = 1;
+						bullets[n].b_vy = 1;
+					}
+					if (random == 3) {
+						bullets[n].b_vx = -1;
+						bullets[n].b_vy = 1;
+					}
+
+				}
+			}
 		}
 	}
 }	
